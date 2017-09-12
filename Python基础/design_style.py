@@ -1,0 +1,137 @@
+#!/usr/bin/env python
+#coding:utf-8
+
+#单例模式：
+
+class Single:
+    def __init__(self):
+        print '这是一个单例模式'
+
+
+#工厂模式：
+
+import random
+
+
+class PetShop:
+
+    def __init__(self, animal_factory=None):
+        self.pet_factory = animal_factory
+
+    def show_pet(self):
+        pet = self.pet_factory.get_pet()
+        print("This is a lovely", str(pet))
+        print("It says", pet.speak())
+        print("It eats", self.pet_factory.get_food())
+
+class Dog:
+    def speak(self):
+        return "woof"
+
+    def __str__(self):
+        return "Dog"
+
+
+class Cat:
+    def speak(self):
+        return "meow"
+
+    def __str__(self):
+        return "Cat"
+
+class DogFactory:
+    def get_pet(self):
+        return Dog()
+
+    def get_food(self):
+        return "dog food"
+
+
+class CatFactory:
+    def get_pet(self):
+        return Cat()
+
+    def get_food(self):
+        return "cat food"
+
+def get_factory():
+    return random.choice([DogFactory, CatFactory])()
+
+#装饰模式：
+from abc import  abstractmethod
+
+
+class Person():
+    def __init__(self, name):
+        self.name = name
+
+    def decorator(self, component):
+        self.component = component
+
+    def show(self):
+        print '%s开始穿衣' % self.name
+        self.component.show()
+
+class Finery():
+    def __init__(self):
+        self.component = None
+
+    def decorator(self, component):
+        self.component = component
+
+    @abstractmethod
+    def show(self):
+        if self.component:
+            self.component.show()
+
+
+class TShirt(Finery):
+    def show(self):
+        Finery.show(self)
+        print '穿T-Shirst'
+
+
+class Trouser(Finery):
+    def show(self):
+        Finery.show(self)
+        print '穿裤子'
+
+
+class Shoe(Finery):
+    def show(self):
+        Finery.show(self)
+        print '穿鞋子'
+
+
+class Tie(Finery):
+    def show(self):
+        Finery.show(self)
+        print '戴红领巾'
+
+if __name__ == '__main__':
+    print '装饰模式：'
+    person = Person('小明')
+    tshirt = TShirt()
+    trouser = Trouser()
+    shoe = Shoe()
+    tie = Tie()
+
+    trouser.decorator(tshirt)
+    shoe.decorator(trouser)
+    tie.decorator(shoe)
+    person.decorator(tie)
+    person.show()
+    print '\n'
+
+if __name__ == "__main__":
+    print '工厂模式：'
+    shop = PetShop()
+    for i in range(3):
+        shop.pet_factory = get_factory()
+        shop.show_pet()
+        print("=" * 20)
+    print '\n'
+
+if __name__ == "__main__":
+     print'单例模式：'
+     danli = Single()
